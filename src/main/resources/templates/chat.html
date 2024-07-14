@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Chat Application</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+</head>
+<body>
+<div id="username-page">
+    <h1>Enter your name</h1>
+    <input type="text" id="username" placeholder="Enter your name...">
+    <button onclick="connect()">Start Chatting</button>
+</div>
+
+<div id="chat-page" style="display: none;">
+    <div id="chat-messages">
+        <div th:each="message : ${messages}">
+            <span th:text="${message.sender}"></span>: <span th:text="${message.content}"></span>
+        </div>
+    </div>
+    <input type="text" id="message-input" placeholder="Type a message...">
+    <button onclick="sendMessage()">Send</button>
+</div>
+
+<script th:inline="javascript">
+    var stompClient = null;
+    var username = null;
+
+    function connect() {
+        username = document.getElementById('username').value.trim();
+        if (username) {
+            document.getElementById('username-page').style.display = 'none';
+            document.getElementById('chat-page').style.display = 'block';
+
+            var socket = new SockJS('/ws');
+            stompClient = Stomp.over(socket);
+            stompClient.connect({}, onConnected, onError);
+        }
+    }
+
+    function onConnected() {
+        stompClient.subscribe('/topic/public', onMessageReceived);
+        stompClient.send("/app/chat.addUser",
+            {},
+            JSON.stringify({sender: username, content: username + ' joined', type: 'JOIN'})
+        )
+    }
+
+    function onError(error) {
+        console.log('Could not connect to WebSocket server. Please refresh this page to try again!');
+    }
+
+    function sendMessage() {
+        var messageContent = document.getElementById('message-input').value.trim();
+        if (messageContent && stompClient) {
+            var chatMessage = {
+                sender: username,
+                content: messageContent,
+                type: 'CHAT'
+            };
+            stompClient.send("/app/chat.sendMessage", {}, JSON.stringify(chatMessage));
+            document.getElementById('message-input').value = '';
+        }
+    }
+
+    function onMessageReceived(payload) {
+        var message = JSON.parse(payload.body);
+        var messageElement = document.createElement('div');
+
+        if (message.type === 'ERROR') {
+            messageElement.classList.add('error-message');
+            messageElement.textContent = message.content;
+            // 오류 메시지를 표시한 후 사용자 이름 입력으로 돌아갑니다
+            document.getElementById('username-page').style.display = 'block';
+            document.getElementById('chat-page').style.display = 'none';
+        } else {
+            messageElement.textContent = message.sender + ': ' + message.content;
+        }
+
+        document.getElementById('chat-messages').appendChild(messageElement);
+    }
+</script>
+</body>
+</html>

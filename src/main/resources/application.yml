@@ -1,0 +1,34 @@
+spring:
+  thymeleaf:
+    cache: false
+    prefix: classpath:/templates/
+    suffix: .html
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/RNDB2?useUnicode=true&characterEncoding=utf8&verifyServerCertificate=false&useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+    username: root
+    password: mysql
+    tomcat:
+      max-active: 50
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+    show-sql: true
+
+server:
+  port: 8080
+
+logging:
+  level:
+    org:
+      springframework:
+        web: DEBUG
+    com:
+      example:
+        chat: DEBUG
+
+
+
+
