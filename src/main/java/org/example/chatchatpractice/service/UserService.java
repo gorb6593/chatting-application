@@ -3,20 +3,42 @@ package org.example.chatchatpractice.service;
 import org.example.chatchatpractice.entity.User;
 import org.example.chatchatpractice.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UserService {
+public class UserService implements UserDetailsService {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public User addUser(String username) {
-        return userRepository.findByUsername(username)
-                .orElseGet(() -> userRepository.save(new User(username)));
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
-    public boolean userExists(String username) {
-        return userRepository.findByUsername(username).isPresent();
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+        return org.springframework.security.core.userdetails.User
+                .withUsername(user.getUsername())
+                .password(user.getPassword())
+                .roles("USER")
+                .build();
+    }
+
+    public User registerNewUser(String username, String password) {
+        if (userRepository.findByUsername(username).isPresent()) {
+            throw new RuntimeException("User already exists");
+        }
+        User user = new User();
+        user.setUsername(username);
+        user.setPassword(passwordEncoder.encode(password));
+        return userRepository.save(user);
     }
 }

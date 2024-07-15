@@ -10,11 +10,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class ChatController {
 
-    @Autowired
-    private ChatMessageService chatMessageService;
+    private final ChatMessageService chatMessageService;
 
-    @GetMapping("/")
-    public String getChat(Model model) {
+    public ChatController(ChatMessageService chatMessageService) {
+        this.chatMessageService = chatMessageService;
+    }
+
+    @GetMapping("/chat")
+    public String chat(Model model) {
         model.addAttribute("messages", chatMessageService.getAllMessages());
         return "chat";
     }

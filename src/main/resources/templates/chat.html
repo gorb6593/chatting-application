@@ -1,53 +1,58 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <title>Chat Application</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="/webjars/sockjs-client/sockjs.min.js"></script>
+    <script src="/webjars/stomp-websocket/stomp.min.js"></script>
 </head>
 <body>
-<div id="username-page">
-    <h1>Enter your name</h1>
-    <input type="text" id="username" placeholder="Enter your name...">
-    <button onclick="connect()">Start Chatting</button>
-</div>
-
-<div id="chat-page" style="display: none;">
-    <div id="chat-messages">
-        <div th:each="message : ${messages}">
-            <span th:text="${message.sender}"></span>: <span th:text="${message.content}"></span>
+<div class="container mt-3">
+    <h2>Welcome, <span sec:authentication="name"></span>!</h2>
+    <form th:action="@{/logout}" method="post" class="mb-3">
+        <button type="submit" class="btn btn-danger">Logout</button>
+    </form>
+    <div id="chat-page">
+        <div id="chat-messages" class="border p-3 mb-3" style="height: 400px; overflow-y: scroll;">
+            <div th:each="message : ${messages}">
+                <span th:text="${message.sender}"></span>: <span th:text="${message.content}"></span>
+            </div>
         </div>
+        <div class="form-group">
+            <input type="text" id="message-input" class="form-control" placeholder="Type a message...">
+        </div>
+        <button onclick="sendMessage()" class="btn btn-primary">Send</button>
     </div>
-    <input type="text" id="message-input" placeholder="Type a message...">
-    <button onclick="sendMessage()">Send</button>
 </div>
 
 <script th:inline="javascript">
+
     var stompClient = null;
-    var username = null;
+    var username = [[${#authentication.name}]];
 
     function connect() {
-        username = document.getElementById('username').value.trim();
-        if (username) {
-            document.getElementById('username-page').style.display = 'none';
-            document.getElementById('chat-page').style.display = 'block';
-
-            var socket = new SockJS('/ws');
-            stompClient = Stomp.over(socket);
-            stompClient.connect({}, onConnected, onError);
-        }
+        var socket = new SockJS('/ws');
+        stompClient = Stomp.over(socket);
+        stompClient.connect({}, onConnected, onError);
     }
 
     function onConnected() {
+        // Subscribe to the Public Topic
         stompClient.subscribe('/topic/public', onMessageReceived);
+
+        // Tell your username to the server
         stompClient.send("/app/chat.addUser",
             {},
-            JSON.stringify({sender: username, content: username + ' joined', type: 'JOIN'})
-        )
+            JSON.stringify({sender: username, type: 'JOIN'})
+        );
+
+        console.log('Connected: ' + username);
     }
 
     function onError(error) {
         console.log('Could not connect to WebSocket server. Please refresh this page to try again!');
+        console.error('STOMP error:', error);
     }
 
     function sendMessage() {
@@ -67,18 +72,30 @@
         var message = JSON.parse(payload.body);
         var messageElement = document.createElement('div');
 
-        if (message.type === 'ERROR') {
-            messageElement.classList.add('error-message');
-            messageElement.textContent = message.content;
-            // 오류 메시지를 표시한 후 사용자 이름 입력으로 돌아갑니다
-            document.getElementById('username-page').style.display = 'block';
-            document.getElementById('chat-page').style.display = 'none';
+        if (message.type === 'JOIN') {
+            messageElement.classList.add('event-message');
+            message.content = message.sender + ' joined!';
+        } else if (message.type === 'LEAVE') {
+            messageElement.classList.add('event-message');
+            message.content = message.sender + ' left!';
         } else {
-            messageElement.textContent = message.sender + ': ' + message.content;
+            messageElement.classList.add('chat-message');
+            var usernameElement = document.createElement('span');
+            usernameElement.classList.add('username');
+            usernameElement.textContent = message.sender;
+            messageElement.appendChild(usernameElement);
         }
 
+        var textElement = document.createElement('p');
+        textElement.textContent = message.content;
+        messageElement.appendChild(textElement);
+
         document.getElementById('chat-messages').appendChild(messageElement);
+        document.getElementById('chat-messages').scrollTop = document.getElementById('chat-messages').scrollHeight;
     }
+
+    // Start the connection
+    connect();
 </script>
 </body>
 </html>
