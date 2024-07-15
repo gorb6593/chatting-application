@@ -1,5 +1,6 @@
 package org.example.chatchatpractice.controller;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
 import lombok.extern.slf4j.Slf4j;
 import org.example.chatchatpractice.entity.ChatMessage;
@@ -13,14 +14,11 @@ import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.stereotype.Controller;
 
 @Slf4j
+@RequiredArgsConstructor
 @Controller
 public class WebSocketChatController {
 
     private final ChatMessageService chatMessageService;
-
-    public WebSocketChatController(ChatMessageService chatMessageService) {
-        this.chatMessageService = chatMessageService;
-    }
 
     @MessageMapping("/chat.sendMessage")
     @SendTo("/topic/public")

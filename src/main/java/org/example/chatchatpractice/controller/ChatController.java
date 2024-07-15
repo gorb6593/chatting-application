@@ -1,20 +1,16 @@
 package org.example.chatchatpractice.controller;
 
-import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.example.chatchatpractice.service.ChatMessageService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ui.Model;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+@RequiredArgsConstructor
 @Controller
 public class ChatController {
 
     private final ChatMessageService chatMessageService;
-
-    public ChatController(ChatMessageService chatMessageService) {
-        this.chatMessageService = chatMessageService;
-    }
 
     @GetMapping("/chat")
     public String chat(Model model) {

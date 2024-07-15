@@ -1,5 +1,6 @@
 package org.example.chatchatpractice.service;
 
+import lombok.RequiredArgsConstructor;
 import org.example.chatchatpractice.entity.User;
 import org.example.chatchatpractice.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,16 +10,12 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+@RequiredArgsConstructor
 @Service
 public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
-    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

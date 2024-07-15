@@ -1,5 +1,6 @@
 package org.example.chatchatpractice.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.example.chatchatpractice.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -8,13 +9,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
+@RequiredArgsConstructor
 public class AuthController {
 
     private final UserService userService;
-
-    public AuthController(UserService userService) {
-        this.userService = userService;
-    }
 
     @GetMapping("/")
     public String root() {
