@@ -13,6 +13,10 @@
     <form th:action="@{/logout}" method="post" class="mb-3">
         <button type="submit" class="btn btn-danger">Logout</button>
     </form>
+    <form th:action="@{/shooting}" method="get" class="mb-3">
+        <button type="submit" class="btn btn-danger">Shooting Game</button>
+    </form>
+
     <div id="chat-page">
         <div id="chat-messages" class="border p-3 mb-3" style="height: 400px; overflow-y: scroll;">
             <div th:each="message : ${messages}">
