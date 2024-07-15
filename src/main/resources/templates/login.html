@@ -9,6 +9,12 @@
     <div class="row justify-content-center">
         <div class="col-md-6">
             <h2 class="text-center mb-4">Login</h2>
+
+            <!-- Success message -->
+            <div th:if="${successMessage}" class="alert alert-success" role="alert">
+                <p th:text="${successMessage}"></p>
+            </div>
+
             <form th:action="@{/login}" method="post">
                 <div class="form-group">
                     <label for="username">Username:</label>

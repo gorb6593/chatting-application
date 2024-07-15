@@ -27,7 +27,6 @@
 </div>
 
 <script th:inline="javascript">
-
     var stompClient = null;
     var username = [[${#authentication.name}]];
 
@@ -38,15 +37,11 @@
     }
 
     function onConnected() {
-        // Subscribe to the Public Topic
         stompClient.subscribe('/topic/public', onMessageReceived);
-
-        // Tell your username to the server
         stompClient.send("/app/chat.addUser",
             {},
             JSON.stringify({sender: username, type: 'JOIN'})
         );
-
         console.log('Connected: ' + username);
     }
 
@@ -56,7 +51,8 @@
     }
 
     function sendMessage() {
-        var messageContent = document.getElementById('message-input').value.trim();
+        var messageInput = document.getElementById('message-input');
+        var messageContent = messageInput.value.trim();
         if (messageContent && stompClient) {
             var chatMessage = {
                 sender: username,
@@ -64,7 +60,7 @@
                 type: 'CHAT'
             };
             stompClient.send("/app/chat.sendMessage", {}, JSON.stringify(chatMessage));
-            document.getElementById('message-input').value = '';
+            messageInput.value = '';
         }
     }
 
@@ -93,6 +89,14 @@
         document.getElementById('chat-messages').appendChild(messageElement);
         document.getElementById('chat-messages').scrollTop = document.getElementById('chat-messages').scrollHeight;
     }
+
+    // 엔터 키 이벤트 리스너 추가
+    document.getElementById('message-input').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            e.preventDefault(); // 폼 제출 방지
+            sendMessage();
+        }
+    });
 
     // Start the connection
     connect();
