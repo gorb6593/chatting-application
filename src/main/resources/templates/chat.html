@@ -87,6 +87,7 @@
 <script th:inline="javascript">
     var stompClient = null;
     var username = [[${#authentication.name}]];
+    var roomName = [[${roomName}]];
 
     function connect() {
         var socket = new SockJS('/ws');
@@ -115,7 +116,8 @@
             var chatMessage = {
                 sender: username,
                 content: messageContent,
-                type: 'CHAT'
+                type: 'CHAT',
+                roomName: roomName
             };
             stompClient.send("/app/chat.sendMessage", {}, JSON.stringify(chatMessage));
             messageInput.value = '';

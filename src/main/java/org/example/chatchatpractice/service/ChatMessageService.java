@@ -18,13 +18,11 @@ public class ChatMessageService {
     private final ChatMessageRepository chatMessageRepository;
 
     @Transactional
-    public ChatMessage saveMessage(ChatMessage message) {
-        try {
-            return chatMessageRepository.save(message);
-        } catch (RuntimeException e) {
-            log.error("Error saving chat message: ", e);
+    public ChatMessage saveMessage(ChatMessage chatMessage) {
+        if (chatMessage.getChatRoom() == null) {
+            throw new IllegalArgumentException("ChatRoom must be set before saving the message");
         }
-        return message;
+        return chatMessageRepository.save(chatMessage);
     }
 
     public List<ChatMessage> getAllMessages() {

@@ -1,5 +1,6 @@
 package org.example.chatchatpractice.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -30,12 +31,25 @@ public class ChatMessage {
     @Enumerated(EnumType.STRING)
     private MessageType type;
 
+
     public enum MessageType {
         CHAT, JOIN, LEAVE
     }
 
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "chat_room_id", nullable = false)
+    private ChatRoom chatRoom;
+
+    @Transient
+    private String roomName;
+
     @PrePersist
     public void prePersist() {
         timestamp = LocalDateTime.now();
+    }
+
+    public String getRoomName() {
+        return chatRoom != null ? chatRoom.getName() : roomName;
     }
 }
