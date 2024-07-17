@@ -31,7 +31,6 @@ public class ChatMessage {
     @Enumerated(EnumType.STRING)
     private MessageType type;
 
-
     public enum MessageType {
         CHAT, JOIN, LEAVE
     }
@@ -47,9 +46,5 @@ public class ChatMessage {
     @PrePersist
     public void prePersist() {
         timestamp = LocalDateTime.now();
-    }
-
-    public String getRoomName() {
-        return chatRoom != null ? chatRoom.getName() : roomName;
     }
 }
