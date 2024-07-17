@@ -1,6 +1,7 @@
 package org.example.chatchatpractice.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.example.chatchatpractice.entity.ChatMessage;
 import org.example.chatchatpractice.entity.ChatRoom;
 import org.example.chatchatpractice.service.ChatMessageService;
 import org.example.chatchatpractice.service.ChatRoomService;
@@ -11,24 +12,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 @Controller
 public class ChatController {
 
     private final ChatMessageService chatMessageService;
     private final ChatRoomService chatRoomService;
-
-
-//    @GetMapping("/chat")
-//    public String chat(Model model) {
-//        model.addAttribute("messages", chatMessageService.getAllMessages());
-//        return "chat";
-//    }
-
-    @GetMapping("/shooting")
-    public String shooting() {
-        return "shooting";
-    }
 
     @GetMapping("/chat")
     public String chatRoomList(Model model) {
@@ -45,7 +36,9 @@ public class ChatController {
     @GetMapping("/chat/{roomName}")
     public String chatRoom(@PathVariable String roomName, Model model) {
         ChatRoom chatRoom = chatRoomService.getChatRoomByName(roomName);
+        List<ChatMessage> messages = chatMessageService.getMessagesByRoomName(roomName);
         model.addAttribute("roomName", roomName);
+        model.addAttribute("messages", messages);
         return "chat";
     }
 

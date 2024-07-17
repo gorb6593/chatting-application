@@ -28,4 +28,8 @@ public class ChatMessageService {
     public List<ChatMessage> getAllMessages() {
         return chatMessageRepository.findAll();
     }
+
+    public List<ChatMessage> getMessagesByRoomName(String roomName) {
+        return chatMessageRepository.findByRoomNameOrderByTimestampAsc(roomName);
+    }
 }
