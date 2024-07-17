@@ -2,22 +2,63 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Chat Rooms</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <style>
+        .chat-rooms {
+            max-height: 60vh;
+            overflow-y: auto;
+        }
+        .room-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 15px;
+            border-bottom: 1px solid #eee;
+        }
+        .room-item:last-child {
+            border-bottom: none;
+        }
+        .room-name {
+            font-weight: bold;
+            color: #007bff;
+            text-decoration: none;
+        }
+        .create-room-form {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-top: 1px solid #dee2e6;
+        }
+    </style>
 </head>
 <body>
-<div class="container mt-3">
-    <h2>Chat Rooms</h2>
-    <ul class="list-group">
-        <li class="list-group-item" th:each="room : ${chatRooms}">
-            <a th:href="@{'/chat/' + ${room.name}}" th:text="${room.name}"></a>
-        </li>
-    </ul>
-    <form th:action="@{/chat/create}" method="post" class="mt-3">
-        <div class="form-group">
-            <input type="text" class="form-control" name="roomName" placeholder="Enter room name">
+<div class="container-fluid mt-3 mb-5">
+    <h2 class="text-center mb-3">Chat Rooms</h2>
+    <div class="chat-rooms">
+        <div class="room-item" th:each="room : ${chatRooms}">
+            <a th:href="@{'/chat/' + ${room.name}}" th:text="${room.name}" class="room-name"></a>
+            <span class="badge badge-primary badge-pill">Members</span>
         </div>
-        <button type="submit" class="btn btn-primary">Create Room</button>
+    </div>
+</div>
+
+<div class="create-room-form">
+    <form th:action="@{/chat/create}" method="post">
+        <div class="input-group">
+            <input type="text" class="form-control" name="roomName" placeholder="Enter room name" required>
+            <div class="input-group-append">
+                <button type="submit" class="btn btn-primary">Create Room</button>
+            </div>
+        </div>
     </form>
 </div>
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 </body>
 </html>
