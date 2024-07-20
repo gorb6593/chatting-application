@@ -6,9 +6,9 @@ spring:
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://127.0.0.1:3306/RNDB2?useUnicode=true&characterEncoding=utf8&verifyServerCertificate=false&useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
-    username: root
-    password: mysql
+    url: jdbc:mysql://scrap-db.c6jykanluvmb.ap-northeast-2.rds.amazonaws.com:3306/SCRAP?useUnicode=true&characterEncoding=utf8&verifyServerCertificate=false&useSSL=false&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true
+    username: readnumber
+    password: readnumber!1
     tomcat:
       max-active: 50
 
@@ -16,7 +16,10 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
-
+chat-chat-practice-0:
+  0:
+    1-SNAPSHOT:
+      jar:
 server:
   port: 8080
 

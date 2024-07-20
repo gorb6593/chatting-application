@@ -26,7 +26,6 @@ class ChatMessageServiceTest {
     @BeforeEach
     void setUp() {
         chatRoom = new ChatRoom();
-        chatRoom.setId(1L);
         chatRoom.setName("Test Room");
 
         chatMessage = new ChatMessage();

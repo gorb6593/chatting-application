@@ -10,7 +10,6 @@ import java.util.Set;
 
 @Entity
 @Getter
-@Setter
 @Table(name = "chat_room")
 public class ChatRoom {
 
@@ -18,6 +17,7 @@ public class ChatRoom {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Setter
     @Column(unique = true)
     private String name;
 
