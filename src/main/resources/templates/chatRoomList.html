@@ -37,7 +37,7 @@
 </head>
 <body>
 <div class="container-fluid mt-3 mb-5">
-    <h2 class="text-center mb-3">Chat Rooms</h2>
+    <h2 class="text-center mb-3">채팅방리스트</h2>
     <div class="chat-rooms">
         <div class="room-item" th:each="room : ${chatRooms}">
             <a th:href="@{'/chat/' + ${room.name}}" th:text="${room.name}" class="room-name"></a>
@@ -49,9 +49,9 @@
 <div class="create-room-form">
     <form th:action="@{/chat/create}" method="post">
         <div class="input-group">
-            <input type="text" class="form-control" name="roomName" placeholder="Enter room name" required>
+            <input type="text" class="form-control" name="roomName" placeholder="채빙방 이름을 입력하세요" required>
             <div class="input-group-append">
-                <button type="submit" class="btn btn-primary">Create Room</button>
+                <button type="submit" class="btn btn-primary">채팅방만들기</button>
             </div>
         </div>
     </form>
