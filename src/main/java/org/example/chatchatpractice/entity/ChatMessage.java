@@ -12,7 +12,6 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "chat_messages")
 @Getter
-@Setter
 public class ChatMessage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,6 +35,7 @@ public class ChatMessage {
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
+    @Setter
     @JoinColumn(name = "chat_room_id", nullable = false)
     private ChatRoom chatRoom;
 
@@ -46,4 +46,6 @@ public class ChatMessage {
     public void prePersist() {
         timestamp = LocalDateTime.now();
     }
+
+
 }
