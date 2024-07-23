@@ -35,7 +35,6 @@ public class ChatController {
 
     @GetMapping("/chat/{roomName}")
     public String chatRoom(@PathVariable String roomName, Model model) {
-        ChatRoom chatRoom = chatRoomService.getChatRoomByName(roomName);
         List<ChatMessage> messages = chatMessageService.getMessagesByRoomName(roomName);
         model.addAttribute("roomName", roomName);
         model.addAttribute("messages", messages);

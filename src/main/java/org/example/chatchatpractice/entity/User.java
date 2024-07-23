@@ -20,4 +20,13 @@ public class User {
     @Column(nullable = false)
     private String password;
 
+    @Setter
+    private String profileImageUrl;
+
+    @Setter
+    private String statusMessage;
+
+    @Setter
+    private String email;
+
 }
