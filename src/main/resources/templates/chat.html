@@ -75,9 +75,24 @@
         }
 
         .message-item {
-            margin-bottom: 15px;
+            margin-bottom: 20px;
             display: flex;
             flex-direction: column;
+        }
+        .message-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+        .profile-image {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 10px;
+        }
+        .sender-name {
+            font-weight: bold;
         }
         .message-content {
             max-width: 70%;
@@ -85,29 +100,22 @@
             border-radius: 15px;
             background-color: #007bff;
             color: white;
-            display: flex;
-            align-items: center;
         }
         .own-message {
             align-items: flex-end;
         }
+        .own-message .message-header {
+            flex-direction: row-reverse;
+        }
+        .own-message .profile-image {
+            margin-right: 0;
+            margin-left: 10px;
+        }
+        .own-message .message-content {
+            background-color: #28a745;
+        }
         .other-message {
             align-items: flex-start;
-        }
-        .message-timestamp {
-            font-size: 0.8em;
-            color: #6c757d;
-            margin-top: 5px;
-        }
-        .profile-image {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            margin-right: 10px;
-            object-fit: cover;
-        }
-        .message-text {
-            flex-grow: 1;
         }
     </style>
 </head>
@@ -218,6 +226,45 @@
     //     chatMessages.appendChild(messageElement);
     //     chatMessages.scrollTop = chatMessages.scrollHeight;
     // }
+    // function displayMessage(message) {
+    //     var chatMessages = document.getElementById('chat-messages');
+    //     var messageElement = document.createElement('div');
+    //     messageElement.classList.add('message-item');
+    //
+    //     if (message.sender === username) {
+    //         messageElement.classList.add('own-message');
+    //     } else {
+    //         messageElement.classList.add('other-message');
+    //     }
+    //
+    //     var contentElement = document.createElement('div');
+    //     contentElement.classList.add('message-content');
+    //
+    //     var profileImageElement = document.createElement('img');
+    //     profileImageElement.classList.add('profile-image');
+    //     // 여기서 사용자의 프로필 이미지를 가져오는 함수를 호출합니다
+    //     getProfileImage(message.sender).then(imageUrl => {
+    //         profileImageElement.src = imageUrl || 'https://i.pinimg.com/474x/05/19/c6/0519c68aab5028942b31d861916f32f8.jpg';
+    //     });
+    //     profileImageElement.alt = message.sender;
+    //
+    //     var textElement = document.createElement('div');
+    //     textElement.classList.add('message-text');
+    //     textElement.innerHTML = '<strong>' + message.sender + ':</strong> ' + message.content;
+    //
+    //     contentElement.appendChild(profileImageElement);
+    //     contentElement.appendChild(textElement);
+    //
+    //     var timestampElement = document.createElement('div');
+    //     timestampElement.classList.add('message-timestamp');
+    //     timestampElement.textContent = formatTimestamp(message.timestamp);
+    //
+    //     messageElement.appendChild(contentElement);
+    //     messageElement.appendChild(timestampElement);
+    //
+    //     chatMessages.appendChild(messageElement);
+    //     chatMessages.scrollTop = chatMessages.scrollHeight;
+    // }
     function displayMessage(message) {
         var chatMessages = document.getElementById('chat-messages');
         var messageElement = document.createElement('div');
@@ -229,8 +276,8 @@
             messageElement.classList.add('other-message');
         }
 
-        var contentElement = document.createElement('div');
-        contentElement.classList.add('message-content');
+        var headerElement = document.createElement('div');
+        headerElement.classList.add('message-header');
 
         var profileImageElement = document.createElement('img');
         profileImageElement.classList.add('profile-image');
@@ -240,17 +287,22 @@
         });
         profileImageElement.alt = message.sender;
 
-        var textElement = document.createElement('div');
-        textElement.classList.add('message-text');
-        textElement.innerHTML = '<strong>' + message.sender + ':</strong> ' + message.content;
+        var senderNameElement = document.createElement('span');
+        senderNameElement.classList.add('sender-name');
+        senderNameElement.textContent = message.sender;
 
-        contentElement.appendChild(profileImageElement);
-        contentElement.appendChild(textElement);
+        headerElement.appendChild(profileImageElement);
+        headerElement.appendChild(senderNameElement);
+
+        var contentElement = document.createElement('div');
+        contentElement.classList.add('message-content');
+        contentElement.textContent = message.content;
 
         var timestampElement = document.createElement('div');
         timestampElement.classList.add('message-timestamp');
         timestampElement.textContent = formatTimestamp(message.timestamp);
 
+        messageElement.appendChild(headerElement);
         messageElement.appendChild(contentElement);
         messageElement.appendChild(timestampElement);
 
