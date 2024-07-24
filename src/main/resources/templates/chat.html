@@ -195,7 +195,18 @@
     //
     //     var contentElement = document.createElement('div');
     //     contentElement.classList.add('message-content');
-    //     contentElement.textContent = message.sender + ': ' + message.content;
+    //
+    //     var profileImageElement = document.createElement('img');
+    //     profileImageElement.classList.add('profile-image');
+    //     profileImageElement.src = message.profileImageUrl || 'https://i.pinimg.com/474x/05/19/c6/0519c68aab5028942b31d861916f32f8.jpg';
+    //     profileImageElement.alt = message.sender;
+    //
+    //     var textElement = document.createElement('div');
+    //     textElement.classList.add('message-text');
+    //     textElement.innerHTML = '<strong>' + message.sender + ':</strong> ' + message.content;
+    //
+    //     contentElement.appendChild(profileImageElement);
+    //     contentElement.appendChild(textElement);
     //
     //     var timestampElement = document.createElement('div');
     //     timestampElement.classList.add('message-timestamp');
@@ -223,7 +234,10 @@
 
         var profileImageElement = document.createElement('img');
         profileImageElement.classList.add('profile-image');
-        profileImageElement.src = message.profileImageUrl || 'https://i.pinimg.com/474x/05/19/c6/0519c68aab5028942b31d861916f32f8.jpg';
+        // 여기서 사용자의 프로필 이미지를 가져오는 함수를 호출합니다
+        getProfileImage(message.sender).then(imageUrl => {
+            profileImageElement.src = imageUrl || 'https://i.pinimg.com/474x/05/19/c6/0519c68aab5028942b31d861916f32f8.jpg';
+        });
         profileImageElement.alt = message.sender;
 
         var textElement = document.createElement('div');
@@ -242,6 +256,13 @@
 
         chatMessages.appendChild(messageElement);
         chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    function getProfileImage(username) {
+        return fetch(`/${username}/profile-image`)
+            .then(response => response.json())
+            .then(data => data.profileImageUrl)
+            .catch(() => null);
     }
 
     function formatTimestamp(timestamp) {

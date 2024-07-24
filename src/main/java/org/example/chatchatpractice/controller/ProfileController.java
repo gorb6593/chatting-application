@@ -32,6 +32,6 @@ public class ProfileController {
                 updatedUser.getProfileImageUrl(),
                 updatedUser.getStatusMessage(),
                 updatedUser.getEmail());
-        return "redirect:/profile";
+        return "redirect:/chat";
     }
 }
