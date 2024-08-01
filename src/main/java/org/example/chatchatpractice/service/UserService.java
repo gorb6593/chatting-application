@@ -3,7 +3,6 @@ package org.example.chatchatpractice.service;
 import lombok.RequiredArgsConstructor;
 import org.example.chatchatpractice.entity.User;
 import org.example.chatchatpractice.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
