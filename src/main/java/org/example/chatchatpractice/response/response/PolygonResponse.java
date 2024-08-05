@@ -1,4 +1,4 @@
-package org.example.chatchatpractice.response;
+package org.example.chatchatpractice.response.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
