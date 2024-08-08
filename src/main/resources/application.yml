@@ -35,6 +35,6 @@ logging:
 
 polygon:
   api:
-    key: YOUR_POLYGON_API_KEY
-    base-url: https://api.polygon.io
+    key: 1zUVA_2C3CwGTWBazIunswBEXffYMuDw
+    baseUrl: https://api.polygon.io
 

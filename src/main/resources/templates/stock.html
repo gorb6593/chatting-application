@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-  <title>Stock Information</title>
+  <title>Stock Search</title>
 </head>
 <body>
-<h1>Enter Stock Symbol</h1>
-<form action="/stock-detail" method="get">
-  <label for="symbol">Stock Symbol:</label>
-  <input type="text" id="symbol" name="symbol" required>
-  <button type="submit">작업중입니다!!</button>
+<h1>Stock Search</h1>
+<form action="/search" method="post">
+  <input type="text" name="symbol" placeholder="Enter stock symbol" required>
+  <button type="submit">Search</button>
 </form>
+<p th:if="${error}" th:text="${error}" style="color: red;"></p>
 </body>
 </html>
