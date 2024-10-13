@@ -3,44 +3,43 @@ package org.example.chatchatpractice.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.example.chatchatpractice.response.response.StockPriceResponse;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
-import java.nio.channels.MembershipKey;
+import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class StockService {
 
-    private final RestTemplate restTemplate;
-    private final PolygonApiClient polygonApiClient;
+    private final WebClient webClient;
 
-//    @Value("${polygon.api.key}")
-//    private String apiKey;
-//
-//    @Value("${polygon.api.base-url}")
-//    private String baseUrl;
+    @Value("${data-go-kr.api.key}")
+    private String serviceKey;
 
-    public Object getStockData() {
-        String url = "https://api.polygon.io/v2/aggs/ticker/AAPL/range/1/day/2023-01-09/2023-02-10?adjusted=true&sort=asc&apiKey=1zUVA_2C3CwGTWBazIunswBEXffYMuDw";
-        return null;
+    @Value("${data-go-kr.api.endPoint}")
+    private String apiBaseUrl;
+
+    public Mono<String> getStockInfo(String itmsNm) {
+
+        String path = "/1160100/service/GetStockSecuritiesInfoService/getStockPriceInfo";
+        String fullUrl = apiBaseUrl + path + "?serviceKey=" + serviceKey + "&resultType=json&numOfRows=1000&beginBasDt=20240101&itmsNm=";
+        String encode = URLEncoder.encode(itmsNm, StandardCharsets.UTF_8);
+        fullUrl = fullUrl + encode;
+
+        return webClient.get()
+                .uri(URI.create(fullUrl))
+                .accept(MediaType.APPLICATION_JSON)  // JSON 응답 요청
+                .retrieve()
+                .bodyToMono(String.class)
+                .doOnNext(response -> log.info("Response: {}", response))
+                .doOnError(error -> log.error("Error occurred: ", error));
     }
-
-    public StockPriceResponse getStockPrice(String symbol) {
-        StockPriceResponse response = polygonApiClient.getStockPrice(symbol);
-
-        if (response == null || response.getResults() == null || response.getResults().isEmpty()) {
-            throw new RuntimeException("No stock data available for " + symbol);
-        }
-
-        // You can add additional business logic here if needed
-        // For example, you might want to calculate some additional metrics or format the data
-
-        return response;
-    }
-
-
 }

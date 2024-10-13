@@ -5,10 +5,10 @@
 </head>
 <body>
 <h1>Stock Search</h1>
-<form action="/search" method="post">
+<form action="/stock-detail" method="get">
   <input type="text" name="symbol" placeholder="Enter stock symbol" required>
   <button type="submit">Search</button>
 </form>
-<p th:if="${error}" th:text="${error}" style="color: red;"></p>
+
 </body>
 </html>

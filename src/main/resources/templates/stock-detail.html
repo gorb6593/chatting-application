@@ -1,19 +1,13 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-  <title th:text="${symbol + ' Stock Details'}">Stock Details</title>
+  <title>Stock Details</title>
 </head>
 <body>
-<h1 th:text="${symbol + ' Stock Details'}">Stock Details</h1>
-<div th:if="${stockData.results != null and !stockData.results.empty}">
-  <p>Close Price: <span th:text="${stockData.results[0].c}"></span></p>
-  <p>Open Price: <span th:text="${stockData.results[0].o}"></span></p>
-  <p>High Price: <span th:text="${stockData.results[0].h}"></span></p>
-  <p>Low Price: <span th:text="${stockData.results[0].l}"></span></p>
-  <p>Volume: <span th:text="${stockData.results[0].v}"></span></p>
+<h1>Stock Details</h1>
+<div>
+
 </div>
-<div th:if="${stockData.results == null or stockData.results.empty}">
-  <p>No data available for this stock.</p>
-</div>
+
 </body>
 </html>
