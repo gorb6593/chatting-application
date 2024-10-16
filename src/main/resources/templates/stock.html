@@ -60,15 +60,33 @@
     tr:hover {
       background-color: #f5f5f5;
     }
+    .summary {
+      background-color: #e9f7ef;
+      border-radius: 8px;
+      padding: 15px;
+      margin-bottom: 20px;
+    }
+    .summary p {
+      margin: 5px 0;
+    }
+    .profit {
+      color: #2ecc71;
+      font-weight: bold;
+    }
+    .loss {
+      color: #e74c3c;
+      font-weight: bold;
+    }
   </style>
 </head>
 <body>
 <div class="container">
   <h1>주식 가격 정보</h1>
   <div class="input-container">
-    <input type="text" id="stockNameInput" placeholder="주식 이름 입력">
+    <input type="text" id="stockNameInput" placeholder="주식 이름 입력 ex) 삼성전자">
     <button onclick="fetchStockData()">검색</button>
   </div>
+  <div id="summary" class="summary"></div>
   <table id="stockTable">
     <thead>
     <tr>
@@ -83,8 +101,15 @@
 </div>
 
 <script>
-
-  console.log("test@@@@@@@@234");
+  document.addEventListener('DOMContentLoaded', function() {
+    const input = document.getElementById('stockNameInput');
+    input.addEventListener('keypress', function(event) {
+      if (event.key === 'Enter') {
+        event.preventDefault();
+        fetchStockData();
+      }
+    });
+  });
 
   async function fetchStockData() {
     const stockName = document.getElementById('stockNameInput').value.trim();
@@ -108,28 +133,65 @@
 
   function displayStockData(data) {
     const tableBody = document.getElementById('stockData');
-    tableBody.innerHTML = ''; // 테이블 초기화
+    const summaryElement = document.getElementById('summary');
+    tableBody.innerHTML = '';
+    summaryElement.innerHTML = '';
 
-    if (!data.response || !data.response.body || !data.response.body.items || !data.response.body.items.item) {
-      tableBody.innerHTML = '<tr><td colspan="2">데이터가 없습니다.</td></tr>';
+    if (!data.response || !data.response.body || !data.response.body.items || !data.response.body.items.item || data.response.body.totalCount === 0) {
+      tableBody.innerHTML = '<tr><td colspan="2">정확한 주식이름을 입력해주세요 EX) NAVER , 삼성전자</td></tr>';
       return;
     }
+    //console.log(JSON.stringify(data));
+    //console.log(data.response.body.totalCount);
 
     const items = data.response.body.items.item;
-    items.forEach(item => {
+    let totalPrice = 0;
+    let totalShares = 0;
+    let totalInvestment = 0;
+    let count = 0;
+    let firstPrice = 0;
+    let lastPrice = 0;
+
+    items.forEach((item, index) => {
       const row = tableBody.insertRow();
       const dateCell = row.insertCell(0);
       const priceCell = row.insertCell(1);
 
-      // 날짜 포맷팅 (YYYYMMDD -> YYYY-MM-DD)
       const date = `${item.basDt.slice(0, 4)}-${item.basDt.slice(4, 6)}-${item.basDt.slice(6, 8)}`;
       dateCell.textContent = date;
 
-      // 가격에 천 단위 구분기호 추가
-      const price = parseInt(item.clpr).toLocaleString() + '원';
-      priceCell.textContent = price;
+      const price = parseInt(item.clpr);
+      priceCell.textContent = price.toLocaleString() + '원';
       priceCell.style.textAlign = 'right';
+
+      totalPrice += price;
+      totalShares++;
+      totalInvestment += price;
+      count++;
+
+      if (index === 0) lastPrice = price;
+      if (index === items.length - 1) firstPrice = price;
     });
+
+    const averagePrice = Math.round(totalPrice / count);
+    const totalProfit = lastPrice - firstPrice;
+    const profitPercentage = ((totalProfit / firstPrice) * 100).toFixed(2);
+
+    const currentValue = totalShares * lastPrice;
+    const dcaProfit = currentValue - totalInvestment;
+    const dcaProfitPercentage = ((dcaProfit / totalInvestment) * 100).toFixed(2);
+
+    let profitClass = totalProfit >= 0 ? 'profit' : 'loss';
+    let dcaProfitClass = dcaProfit >= 0 ? 'profit' : 'loss';
+
+    summaryElement.innerHTML = `
+      <p>2024년 1월1일부터 매일 1주 구매 시</p>
+      <p>총 ${items.length}일의 주식모음</p>
+      <p>평균 가격: ${averagePrice.toLocaleString()}원</p>
+      <p>총 투자 금액: ${totalInvestment.toLocaleString()}원</p>
+      <p>현재 가치: ${currentValue.toLocaleString()}원</p>
+      <p class="${dcaProfitClass}">총 이익: ${dcaProfit.toLocaleString()}원 (${dcaProfitPercentage}%)</p>
+    `;
   }
 </script>
 </body>
