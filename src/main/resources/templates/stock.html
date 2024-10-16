@@ -103,9 +103,28 @@
       100% { transform: rotate(360deg); }
     }
 
+    .back-button {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      padding: 10px 15px;
+      background-color: #3498db;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+      z-index: 1000;
+    }
+    .back-button:hover {
+      background-color: #2980b9;
+    }
+
   </style>
 </head>
 <body>
+
+<!--<button class="back-button" onclick="goBack()">뒤로가기</button>-->
 
 <div id="loading" class="loading">
   <div class="loading-spinner"></div>
@@ -132,6 +151,11 @@
 </div>
 
 <script>
+
+  function goBack() {
+    window.location.href = '/chat';
+  }
+
   document.addEventListener('DOMContentLoaded', function() {
     const input = document.getElementById('stockNameInput');
     input.addEventListener('keypress', function(event) {
@@ -232,7 +256,7 @@
 
     summaryElement.innerHTML = `
       <p>2024년 1월1일부터 매일 1주 구매 시</p>
-      <p>총 ${items.length}일의 주식모음</p>
+      <p>총 ${items.length}주</p>
       <p>평균 가격: ${averagePrice.toLocaleString()}원</p>
       <p>총 투자 금액: ${totalInvestment.toLocaleString()}원</p>
       <p>현재 가치: ${currentValue.toLocaleString()}원</p>
