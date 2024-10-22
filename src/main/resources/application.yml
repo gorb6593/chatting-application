@@ -34,3 +34,10 @@ data-go-kr:
   api:
     key: qKOCJtDk7u9vRM743o9NTAYykvtyaUOFp6nsdUa022CX0nDPl2F04E1%2FekoL0Rd72EjqFvJZy0JJnSPlDNT3uA%3D%3D
     endPoint: https://apis.data.go.kr
+
+chat-api:
+  naver:
+    api-url: https://clovastudio.stream.ntruss.com/testapp/v1/chat-completions/HCX-003
+    api-key: NTA0MjU2MWZlZTcxNDJiY+d5RtVdyFd6UDRBId6yv229hZ0bTSPg02X1ML6MiRPx
+    gateway-key: 2ZE91K062fn7kKpp3AQoGeYNPvYxoGcUImFkmB9q
+    request-id: 3da3df600cf74dbd83cf90c38db00993

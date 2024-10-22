@@ -50,7 +50,7 @@ public class ChatController {
     @PostMapping("/send-message")
     private ResponseEntity<String> sendMessage(@RequestBody String message) {
         try {
-            return ChatMessageService.sendRequest(message);
+            return chatMessageService.sendRequest(message);
         } catch (IOException e) {
             log.error("message error :: {}", e.getMessage());
             return null;

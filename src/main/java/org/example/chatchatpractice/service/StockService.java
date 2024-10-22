@@ -26,12 +26,17 @@ public class StockService {
     @Value("${data-go-kr.api.endPoint}")
     private String apiBaseUrl;
 
+    @Value("${chat-api.naver.api-url}")
+    private String apiUrl;
+
     public Mono<String> getStockInfo(String itmsNm) {
 
         String path = "/1160100/service/GetStockSecuritiesInfoService/getStockPriceInfo";
         String fullUrl = apiBaseUrl + path + "?serviceKey=" + serviceKey + "&resultType=json&numOfRows=1000&beginBasDt=20240101&itmsNm=";
         String encode = URLEncoder.encode(itmsNm, UTF_8);
         fullUrl = fullUrl + encode;
+
+
 
         return webClient.get()
                 .uri(URI.create(fullUrl))

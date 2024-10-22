@@ -13,6 +13,7 @@ import org.example.chatchatpractice.repository.ChatMessageRepository;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -27,10 +28,17 @@ import java.util.List;
 @Service
 public class ChatMessageService {
 
-    private static final String API_URL = "https://clovastudio.stream.ntruss.com/testapp/v1/chat-completions/HCX-003";
-    private static final String CLOVA_STUDIO_API_KEY = "NTA0MjU2MWZlZTcxNDJiY+d5RtVdyFd6UDRBId6yv229hZ0bTSPg02X1ML6MiRPx";
-    private static final String API_GATEWAY_KEY = "2ZE91K062fn7kKpp3AQoGeYNPvYxoGcUImFkmB9q";
-    private static final String REQUEST_ID = "3da3df600cf74dbd83cf90c38db00993";
+    @Value("${chat-api.naver.api-url}")
+    private String API_URL;
+
+    @Value("${chat-api.naver.api-key}")
+    private String CLOVA_STUDIO_API_KEY;
+
+    @Value("${chat-api.naver.gateway-key}")
+    private String API_GATEWAY_KEY;
+
+    @Value("${chat-api.naver.request-id}")
+    private String REQUEST_ID;
 
     private final ChatMessageRepository chatMessageRepository;
 
@@ -50,7 +58,7 @@ public class ChatMessageService {
         return chatMessageRepository.findByRoomNameOrderByTimestampAsc(roomName);
     }
 
-    public static ResponseEntity<String> sendRequest(String userMessage) throws IOException {
+    public ResponseEntity<String> sendRequest(String userMessage) throws IOException {
         try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
             org.apache.hc.client5.http.classic.methods.HttpPost httpPost = new HttpPost(API_URL);
 
