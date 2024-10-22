@@ -17,9 +17,11 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/register", "/webjars/**" ,"/api/stock/**").permitAll()
+                        .requestMatchers("/register", "/webjars/**" ,"/api/stock/**", "/send-message").permitAll()
                         .anyRequest().authenticated()
                 )
+                .csrf(csrf -> csrf
+                        .ignoringRequestMatchers("/send-message"))
                 .formLogin((form) -> form
                         .loginPage("/login")
                         .defaultSuccessUrl("/chat", true)
