@@ -81,7 +81,7 @@ public class ChatMessageService {
             requestBody.put("messages", messages);
             requestBody.put("topP", 0.8);
             requestBody.put("topK", 0);
-            requestBody.put("maxTokens", 256);
+            requestBody.put("maxTokens", 2024);
             requestBody.put("temperature", 0.5);
             requestBody.put("repeatPenalty", 5.0);
             requestBody.put("stopBefore", new JSONArray());
