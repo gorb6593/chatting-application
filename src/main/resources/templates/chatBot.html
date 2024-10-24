@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <title>LLM</title>
+    <title>ClovaXChatBot</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -79,12 +79,50 @@
             cursor: pointer;
             font-size: 16px;
         }
+
+        .loading-message {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .loading-dots {
+            display: flex;
+            gap: 4px;
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            background-color: #4CAF50;
+            border-radius: 50%;
+            animation: bounce 1.4s infinite ease-in-out;
+        }
+
+        .dot:nth-child(1) { animation-delay: -0.32s; }
+        .dot:nth-child(2) { animation-delay: -0.16s; }
+
+        @keyframes bounce {
+            0%, 80%, 100% {
+                transform: scale(0);
+            }
+            40% {
+                transform: scale(1.0);
+            }
+        }
+
+        /* 버튼 비활성화 스타일 */
+        #send-button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+
     </style>
 </head>
 <body>
 <div class="chat-container">
     <div class="chat-header">
-        <h2>채팅</h2>
+        <h2>무엇이든 물어보세요</h2>
     </div>
     <div class="chat-messages" id="chat-messages">
         <!-- 메시지들이 여기에 동적으로 추가됩니다 -->
@@ -108,11 +146,43 @@
         chatMessages.scrollTop = chatMessages.scrollHeight;
     }
 
+    function addLoadingMessage() {
+        const loadingDiv = document.createElement('div');
+        loadingDiv.className = 'message bot';
+        loadingDiv.id = 'loading-message';
+        loadingDiv.innerHTML = `
+            <span class="message-content loading-message">
+                잠시만 기다려주세요
+                <span class="loading-dots">
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                </span>
+            </span>
+        `;
+        chatMessages.appendChild(loadingDiv);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    function removeLoadingMessage() {
+        const loadingMessage = document.getElementById('loading-message');
+        if (loadingMessage) {
+            loadingMessage.remove();
+        }
+    }
+
     function sendMessage() {
         const message = userInput.value.trim();
         if (message) {
+            // 입력창과 전송 버튼 비활성화
+            userInput.disabled = true;
+            sendButton.disabled = true;
+
             addMessage(message, true);
             userInput.value = '';
+
+            // 로딩 메시지 추가
+            addLoadingMessage();
 
             $.ajax({
                 url: '/send-message',
@@ -120,13 +190,25 @@
                 contentType: 'application/json',
                 data: JSON.stringify(message),
                 success: function(response) {
+                    // 로딩 메시지 제거
+                    removeLoadingMessage();
+
                     console.log(response);
                     const botMessage = response.result.message.content;
 
                     addMessage(botMessage, false);
                 },
                 error: function() {
+                    // 로딩 메시지 제거
+                    removeLoadingMessage();
+
                     addMessage("죄송합니다. 오류가 발생했습니다.", false);
+                },
+                complete: function() {
+                    // 입력창과 전송 버튼 활성화
+                    userInput.disabled = false;
+                    sendButton.disabled = false;
+                    userInput.focus();
                 }
             });
         }
