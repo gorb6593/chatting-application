@@ -39,4 +39,4 @@ out/
 ### yml ###
 #application-*.yml
 #git rm --cached src/main/resources/application.yml
-application.yml
+#application.yml //생각해보기
