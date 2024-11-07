@@ -3,7 +3,6 @@ package org.example.chatchatpractice.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.chatchatpractice.entity.ChatMessage;
-import org.example.chatchatpractice.entity.ChatRoom;
 import org.example.chatchatpractice.service.ChatMessageService;
 import org.example.chatchatpractice.service.ChatRoomService;
 import org.springframework.http.ResponseEntity;
