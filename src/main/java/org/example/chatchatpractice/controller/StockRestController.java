@@ -25,6 +25,6 @@ public class StockRestController {
 
     @GetMapping("/test123")
     public String test123() {
-        return "123";
+        return "1234";
     }
 }
